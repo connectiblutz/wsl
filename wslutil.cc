@@ -38,11 +38,20 @@ std::string WslUtil::getWslInterface(const std::string& ip) {
 unsigned long WslUtil::getWslVersion(const std::string& ip) {
   if (WslUtil::isWsl(ip)) {
     auto distro = WslUtil::getWslName(ip);
-    auto wDistro = common::StringUtil::toWide(distro);
-    unsigned long version;
-    if (WslGetDistributionConfiguration(wDistro.c_str(),&version,nullptr,nullptr,nullptr,nullptr)) {
-      common::LogUtil::Debug()<<"wsl version "<<version;
-      return version;
+    auto wDistro = common::StringUtil::toWide(distro);    
+    ULONG Version, DefaultUID, DefaultEnvCnt;
+    WSL_DISTRIBUTION_FLAGS WslFlags;
+    PSTR* DefaultEnv = NULL;
+    if (S_OK == WslGetDistributionConfiguration(wDistro.c_str(),&Version,&DefaultUID,&WslFlags,&DefaultEnv,&DefaultEnvCnt)) {
+      
+        printf("Version: %lu\n"
+               "DefaultUID: %lu\n"
+               "WslFlags: %i\n"
+               "Default Environment Variables Array: %s\n"
+               "Default Environment Variables Count: %lu\n",
+               Version, DefaultUID, WslFlags, *DefaultEnv, DefaultEnvCnt);
+      common::LogUtil::Debug()<<"wsl version "<<Version;
+      return Version;
     }
     return 1;
   }
