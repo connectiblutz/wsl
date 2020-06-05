@@ -2,7 +2,7 @@
 #include "executil.h"
 #include "stringutil.h"
 #include "logutil.h"
-
+#include "WslApiLoader.h"
 #include <windows.h>
 #include <wslapi.h>
 
@@ -38,11 +38,12 @@ std::string WslUtil::getWslInterface(const std::string& ip) {
 unsigned long WslUtil::getWslVersion(const std::string& ip) {
   if (WslUtil::isWsl(ip)) {
     auto distro = WslUtil::getWslName(ip);
-    auto wDistro = common::StringUtil::toWide(distro);    
+    auto wDistro = common::StringUtil::toWide(distro); 
+    auto loader =  WslApiLoader(wDistro);   
     ULONG Version, DefaultUID, DefaultEnvCnt;
     WSL_DISTRIBUTION_FLAGS WslFlags;
     PSTR* DefaultEnv = NULL;
-    if (S_OK == WslGetDistributionConfiguration(wDistro.c_str(),&Version,&DefaultUID,&WslFlags,&DefaultEnv,&DefaultEnvCnt)) {
+    if (S_OK == loader.WslGetDistributionConfiguration(&Version,&DefaultUID,&WslFlags,&DefaultEnv,&DefaultEnvCnt)) {
       
         printf("Version: %lu\n"
                "DefaultUID: %lu\n"

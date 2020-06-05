@@ -4,7 +4,9 @@
 //
 
 #pragma once
+#include <windows.h>
 #include <wslapi.h>
+#include <string>
 
 // This error definition is present in the Spring Creators Update SDK.
 #ifndef ERROR_LINUX_SUBSYSTEM_NOT_PRESENT
@@ -44,6 +46,12 @@ class WslApiLoader
                       HANDLE stdErr,
                       HANDLE *process);
 
+    HRESULT WslGetDistributionConfiguration(ULONG *distributionVersion,
+                                            ULONG *defaultUID,
+                                            WSL_DISTRIBUTION_FLAGS *wslDistributionFlags,
+                                            PSTR **defaultEnvironmentVariables,
+                                            ULONG *defaultEnvironmentVariableCount);
+
   private:
     std::wstring _distributionName;
     HMODULE _wslApiDll;
@@ -52,6 +60,7 @@ class WslApiLoader
     WSL_CONFIGURE_DISTRIBUTION _configureDistribution;
     WSL_LAUNCH_INTERACTIVE _launchInteractive;
     WSL_LAUNCH _launch;
+    WSL_GET_DISTRIBUTION_CONFIGURATION _getDistributionConfiguration;
 };
 
 extern WslApiLoader g_wslApi;
