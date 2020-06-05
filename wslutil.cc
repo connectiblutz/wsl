@@ -9,6 +9,7 @@
 
 namespace apfd::wsl {
 
+#define WSL_VERSION_2 0x08
 
 unsigned long WslUtil::getVersion(const std::string& distro) {
   auto wDistro = common::StringUtil::toWide(distro); 
@@ -17,8 +18,7 @@ unsigned long WslUtil::getVersion(const std::string& distro) {
   WSL_DISTRIBUTION_FLAGS WslFlags;
   PSTR* DefaultEnv = NULL;
   if (S_OK == loader.WslGetDistributionConfiguration(&Version,&DefaultUID,&WslFlags,&DefaultEnv,&DefaultEnvCnt)) {
-    /*
-    printf("Version: %lu\n"
+    /*printf("Version: %lu\n"
             "DefaultUID: %lu\n"
             "Default Environment Variables Count: %lu\n",
             Version, DefaultUID, DefaultEnvCnt);
@@ -27,11 +27,16 @@ unsigned long WslUtil::getVersion(const std::string& distro) {
     }
     if (WslFlags&WSL_DISTRIBUTION_FLAGS_ENABLE_INTEROP) printf("WslFlags: WSL_DISTRIBUTION_FLAGS_ENABLE_INTEROP\n");
     if (WslFlags&WSL_DISTRIBUTION_FLAGS_APPEND_NT_PATH) printf("WslFlags: WSL_DISTRIBUTION_FLAGS_APPEND_NT_PATH\n");
-    if (WslFlags&WSL_DISTRIBUTION_FLAGS_ENABLE_DRIVE_MOUNTING) printf("WslFlags: WSL_DISTRIBUTION_FLAGS_ENABLE_DRIVE_MOUNTING\n");*/
+    if (WslFlags&WSL_DISTRIBUTION_FLAGS_ENABLE_DRIVE_MOUNTING) printf("WslFlags: WSL_DISTRIBUTION_FLAGS_ENABLE_DRIVE_MOUNTING\n");
+    if (WslFlags&WSL_VERSION_2) printf("WslFlags: WSL_VERSION_2\n");*/
 
     for (unsigned int i = 0; i < DefaultEnvCnt; i++) {
       free(DefaultEnv[i]);
     }
+
+    // Version, as returned by WslGetDistributionConfiguration, is wrong. Check flags for (undocumented) 0x08 instead
+    // see https://github.com/Biswa96/wslbridge2/issues/11#issuecomment-544376625
+    Version=(WslFlags&WSL_VERSION_2)?2:1;
 
     common::LogUtil::Debug()<<"wsl version "<<Version;
     return Version;
