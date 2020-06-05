@@ -45,7 +45,7 @@ unsigned long WslUtil::getVersion(const std::string& distro) {
 }
 
 std::string WslUtil::getIP(const std::string& distro, const std::string& intf) {
-  std::string output = run(distro,"/bin/bash -c \"ip -4 addr show "+intf+" | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'\"");
+  std::string output = run(distro,"ip -4 addr show "+intf+" | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'");
   return common::StringUtil::trim(output);
 }
 
