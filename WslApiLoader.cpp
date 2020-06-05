@@ -34,7 +34,8 @@ BOOL WslApiLoader::WslIsOptionalComponentInstalled()
             (_registerDistribution != nullptr) &&
             (_configureDistribution != nullptr) &&
             (_launchInteractive != nullptr) &&
-            (_launch != nullptr));
+            (_launch != nullptr) &&
+            (_getDistributionConfiguration != nullptr));
 }
 
 BOOL WslApiLoader::WslIsDistributionRegistered()
