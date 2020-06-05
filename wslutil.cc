@@ -11,9 +11,8 @@ namespace apfd::wsl {
 
 #define WSL_VERSION_2 0x08
 
-unsigned long WslUtil::getVersion(const std::string& distro) {
-  auto wDistro = common::StringUtil::toWide(distro); 
-  auto loader =  WslApiLoader(wDistro);   
+unsigned long WslUtil::getVersion(const std::wstring& distro) {
+  auto loader =  WslApiLoader(distro);   
   ULONG Version, DefaultUID, DefaultEnvCnt;
   WSL_DISTRIBUTION_FLAGS WslFlags;
   PSTR* DefaultEnv = NULL;
@@ -38,31 +37,29 @@ unsigned long WslUtil::getVersion(const std::string& distro) {
     // see https://github.com/Biswa96/wslbridge2/issues/11#issuecomment-544376625
     Version=(WslFlags&WSL_VERSION_2)?2:1;
 
-    common::LogUtil::Debug()<<"wsl version "<<Version;
+    common::LogUtil::Debug()<<L"wsl version "<<Version;
     return Version;
   }
   return 1;
 }
 
-std::string WslUtil::getIP(const std::string& distro, const std::string& intf) {
-  std::string output = run(distro,"ip -4 addr show "+intf+" | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'");
+std::wstring WslUtil::getIP(const std::wstring& distro, const std::wstring& intf) {
+  std::wstring output = run(distro,L"ip -4 addr show "+intf+L" | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'");
   return common::StringUtil::trim(output);
 }
 
-std::string WslUtil::run(const std::string& distro, const std::string& command) {
-  std::string ret;
+std::wstring WslUtil::run(const std::wstring& distro, const std::wstring& command) {
+  std::wstring ret;
   // Create a pipe to read the output of the launched process.
   HANDLE readPipe;
   HANDLE writePipe;
   SECURITY_ATTRIBUTES sa{sizeof(sa), nullptr, true};
-  auto wDistro = common::StringUtil::toWide(distro); 
-  auto loader =  WslApiLoader(wDistro);   
+  auto loader =  WslApiLoader(distro);   
   if (CreatePipe(&readPipe, &writePipe, &sa, 0)) {
     // Query the UID of the supplied username.
     common::LogUtil::Debug()<<command;
-    auto wCommand = common::StringUtil::toWide(command); 
     HANDLE child;
-    HRESULT hr = loader.WslLaunch(wCommand.c_str(), true, GetStdHandle(STD_INPUT_HANDLE), writePipe, GetStdHandle(STD_ERROR_HANDLE), &child);
+    HRESULT hr = loader.WslLaunch(command.c_str(), true, GetStdHandle(STD_INPUT_HANDLE), writePipe, GetStdHandle(STD_ERROR_HANDLE), &child);
     if (SUCCEEDED(hr)) {
       // Wait for the child to exit and ensure process exited successfully.
       WaitForSingleObject(child, INFINITE);
@@ -71,9 +68,9 @@ std::string WslUtil::run(const std::string& distro, const std::string& command) 
         hr = E_INVALIDARG;
       }
       CloseHandle(child);
-      char buffer[1024];
+      wchar_t buffer[1024];
       DWORD bytesRead;
-      std::stringstream strbuf;
+      std::wostringstream strbuf;
       while (true) {
         DWORD bytesAvail = 0;
         if (!PeekNamedPipe(readPipe, NULL, 0, NULL, &bytesAvail, NULL)) {
