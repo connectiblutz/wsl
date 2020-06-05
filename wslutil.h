@@ -6,11 +6,9 @@ namespace apfd::wsl {
 
 class WslUtil {
     public:
-        static bool isWsl(const std::string& ip);
-        static std::string getWslName(const std::string& ip);
-        static std::string getWslInterface(const std::string& ip);
-        static std::string getWslIp(const std::string& ip);
-        static unsigned long getWslVersion(const std::string& ip);
+        static std::string getIP(const std::string& distro, const std::string& intf);
+        static unsigned long getVersion(const std::string& distro);
+        static std::string run(const std::string& distro, const std::string& command);
 };
 
 }
