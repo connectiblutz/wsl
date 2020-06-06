@@ -68,7 +68,7 @@ std::wstring WslUtil::run(const std::wstring& distro, const std::wstring& comman
         hr = E_INVALIDARG;
       }
       CloseHandle(child);
-      wchar_t buffer[1024];
+      char buffer[1024];
       DWORD bytesRead;
       std::wostringstream strbuf;
       while (true) {
@@ -80,7 +80,7 @@ std::wstring WslUtil::run(const std::wstring& distro, const std::wstring& comman
         if (ReadFile(readPipe, buffer, (sizeof(buffer)-1), &bytesRead, nullptr)) {
           if (bytesRead==0) break;
           buffer[bytesRead] = ANSI_NULL;
-          strbuf<<buffer;
+          strbuf<<common::StringUtil::toWide(buffer);
         }
       }
       ret = strbuf.str();
