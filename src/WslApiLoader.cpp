@@ -4,7 +4,7 @@
 //
 
 #include "WslApiLoader.h"
-#include "logutil.h"
+#include "common/logutil.h"
 
 WslApiLoader::WslApiLoader(const std::wstring& distributionName) :
     _distributionName(distributionName)
@@ -47,7 +47,7 @@ HRESULT WslApiLoader::WslRegisterDistribution()
 {
     HRESULT hr = _registerDistribution(_distributionName.c_str(), L"install.tar.gz");
     if (FAILED(hr)) {
-        apfd::common::LogUtil::Debug()<<"MSG_WSL_REGISTER_DISTRIBUTION_FAILED "<< hr;
+        common::LogUtil::Debug()<<"MSG_WSL_REGISTER_DISTRIBUTION_FAILED "<< hr;
     }
 
     return hr;
@@ -57,7 +57,7 @@ HRESULT WslApiLoader::WslConfigureDistribution(ULONG defaultUID, WSL_DISTRIBUTIO
 {
     HRESULT hr = _configureDistribution(_distributionName.c_str(), defaultUID, wslDistributionFlags);
     if (FAILED(hr)) {
-        apfd::common::LogUtil::Debug()<<"MSG_WSL_CONFIGURE_DISTRIBUTION_FAILED "<< hr;
+        common::LogUtil::Debug()<<"MSG_WSL_CONFIGURE_DISTRIBUTION_FAILED "<< hr;
     }
 
     return hr;
@@ -67,7 +67,7 @@ HRESULT WslApiLoader::WslLaunchInteractive(PCWSTR command, BOOL useCurrentWorkin
 {
     HRESULT hr = _launchInteractive(_distributionName.c_str(), command, useCurrentWorkingDirectory, exitCode);
     if (FAILED(hr)) {
-        apfd::common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_INTERACTIVE_FAILED "<< command << " " << hr;
+        common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_INTERACTIVE_FAILED "<< command << " " << hr;
     }
 
     return hr;
@@ -77,7 +77,7 @@ HRESULT WslApiLoader::WslLaunch(PCWSTR command, BOOL useCurrentWorkingDirectory,
 {
     HRESULT hr = _launch(_distributionName.c_str(), command, useCurrentWorkingDirectory, stdIn, stdOut, stdErr, process);
     if (FAILED(hr)) {
-        apfd::common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_FAILED "<< command << " " << hr;
+        common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_FAILED "<< command << " " << hr;
     }
 
     return hr;
@@ -86,7 +86,7 @@ HRESULT WslApiLoader::WslLaunch(PCWSTR command, BOOL useCurrentWorkingDirectory,
 HRESULT WslApiLoader::WslGetDistributionConfiguration(ULONG *distributionVersion, ULONG *defaultUID, WSL_DISTRIBUTION_FLAGS *wslDistributionFlags, PSTR **defaultEnvironmentVariables, ULONG *defaultEnvironmentVariableCount) {
     HRESULT hr = _getDistributionConfiguration(_distributionName.c_str(), distributionVersion, defaultUID, wslDistributionFlags, defaultEnvironmentVariables, defaultEnvironmentVariableCount);
     if (FAILED(hr)) {
-        apfd::common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_FAILED "<< hr;
+        common::LogUtil::Debug()<<"MSG_WSL_LAUNCH_FAILED "<< hr;
     }
 
     return hr;
