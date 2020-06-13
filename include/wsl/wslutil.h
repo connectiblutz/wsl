@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace apfd::wsl {
+namespace wsl {
 
 class WslUtil {
     public:

@@ -1,23 +1,22 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.13)
 
 
-add_library(wsl
-  wslutil.cc
-  wslutil.h
-  WslApiLoader.cpp
-  WslApiLoader.h
+add_library(wsl)
+target_sources(wsl
+  PRIVATE
+    src/wslutil.cc
+    src/WslApiLoader.cpp
+    src/WslApiLoader.h
+  PUBLIC
+    include/wsl/wslutil.h
 )
 target_include_directories(wsl PUBLIC
-  .
+  include/
 )
 target_link_libraries(wsl PRIVATE
   common
 )
 
-
-target_link_directories(wsl PUBLIC
-  .
-)
 if (WIN32)
 target_compile_definitions(wsl PRIVATE
   UNICODE
