@@ -18,3 +18,8 @@ target_link_libraries(wsl PRIVATE
 target_link_directories(wsl PUBLIC
   .
 )
+if (WIN32)
+target_compile_definitions(wsl PRIVATE
+  UNICODE
+)
+endif()

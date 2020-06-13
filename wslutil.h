@@ -6,9 +6,9 @@ namespace apfd::wsl {
 
 class WslUtil {
     public:
-        static std::wstring getIP(const std::wstring& distro, const std::wstring& intf);
-        static unsigned long getVersion(const std::wstring& distro);
-        static std::wstring run(const std::wstring& distro, const std::wstring& command);
+        static std::string getIP(const std::string& distro, const std::string& intf);
+        static unsigned long getVersion(const std::string& distro);
+        static std::string run(const std::string& distro, const std::string& command);
 };
 
 }
