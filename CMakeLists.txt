@@ -25,7 +25,7 @@ target_include_directories(wsl PUBLIC
   include/
 )
 target_link_libraries(wsl PRIVATE
-  common
+  bcl
 )
 
 if (WIN32)
